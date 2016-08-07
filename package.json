@@ -1,0 +1,39 @@
+{
+  "name": "sudoku",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "clean": "rimraf build/*",
+    "minify": "uglifyjs -c -m -o build/bundle.js -- build/bundle.js",
+    "build": "npm run clean && browserify index.js > build/bundle.js && npm run minify",
+    "watch": "budo index.js:build/bundle.js -o -l --dir=src"
+  },
+  "browserify": {
+    "transform": [
+      [
+        "babelify",
+        {
+          "presets": [
+            "es2015"
+          ]
+        }
+      ]
+    ]
+  },
+  "author": "Artjom Vinnikov (https://github.com/Zenext)",
+  "license": "ISC",
+  "devDependencies": {
+    "babel-preset-es2015": "^6.9.0",
+    "babelify": "^7.3.0",
+    "browserify": "^13.0.1",
+    "budo": "^8.3.0",
+    "pixi.js": "^3.0.11",
+    "rimraf": "^2.5.3",
+    "uglify-js": "^2.7.0"
+  },
+  "dependencies": {
+    "pixi.js": "^3.0.11"
+  }
+}
