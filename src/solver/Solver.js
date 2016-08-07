@@ -7,7 +7,7 @@ let _tokens;
 
 function solve(board, tokens) {
 	_board = Array.from(board);
-    _tokens = tokens || [1, 2, 3, 4, 5, 6, 7, 8, 9];
+	_tokens = tokens || [1, 2, 3, 4, 5, 6, 7, 8, 9];
 
 	backtrack(getEmptyCell())
 
@@ -56,8 +56,8 @@ function getEmptyCell() {
 
 function isValid(x, y, value) {
 	return isRowSafe(x, value) &&
-		   isColSafe(y, value) &&
-		   isBlockSafe(x, y, value)
+			 isColSafe(y, value) &&
+			 isBlockSafe(x, y, value)
 };
 
 function isRowSafe(row, value) {
