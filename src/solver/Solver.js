@@ -7,7 +7,7 @@ let _tokens;
 
 function solve(board, tokens) {
 	_board = Array.from(board);
-	_tokens = tokens || [1, 2, 3, 4, 5, 6, 7, 8, 9];
+    _tokens = tokens || [1, 2, 3, 4, 5, 6, 7, 8, 9];
 
 	backtrack(getEmptyCell())
 
@@ -22,8 +22,9 @@ function backtrack(pos) {
 	if (isLastCell(pos))
 		return true;
 
-	for (let i = 0; i < possibles.length; i++) {
+	while (possibles.length > 0) {
 		value = randomFromArray(possibles);
+		possibles.splice(possibles.indexOf(value), 1);
 
 		if (isValid(x, y, value)) {
 			_board[x][y] = value;
