@@ -4,29 +4,37 @@ const possiblesxx = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i'];
 
 let _board;
 let _tokens;
+let _unique;
 
-function solve(board, tokens) {
-	_board = Array.from(board);
+function solve(board, unique, tokens) {
+	_board = board;
 	_tokens = tokens || [1, 2, 3, 4, 5, 6, 7, 8, 9];
+	_unique = unique;
 
-	backtrack(getEmptyCell())
+	const solvable = backtrack(getEmptyCell());
 
-	return _board;
+	if (solvable)
+		return {board: _board, solvable};
+	
+	return {board: [], solvable};
 };
 
 function backtrack(pos) {
 	const possibles = Array.from(_tokens);
 	const {x, y} = pos;
 	let value, nextCell;
+	let solutions = 0;
 
-	if (isLastCell(pos))
-		return true;
-
-	while (possibles.length > 0) {
-		value = randomFromArray(possibles);
-		possibles.splice(possibles.indexOf(value), 1);
+	for (let i = 0; i < possibles.length; i++) {
+		value = possibles[i];
 
 		if (isValid(x, y, value)) {
+			solutions++;
+			
+			if (_unique && solutions > 1) {
+				return false;
+			}
+
 			_board[x][y] = value;
 			nextCell = getEmptyCell();
 
@@ -40,7 +48,7 @@ function backtrack(pos) {
 };
 
 function isLastCell(pos) {
-	return (pos.x === 9 && pos.y === 9);
+	return (pos.x === 8 && pos.y === 8);
 };
 
 function getEmptyCell() {
