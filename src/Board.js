@@ -1,100 +1,110 @@
-const rows = 9;
-const columns = 9;
-const board = [];
+const Board = {
+    create(empty = true, matrix = null) {
+        const self = Object.create(Board);
+        self._matrix = matrix || self._createEmptyBoard();
+        self._solvable = null;
 
-function initBoard() {
-	for (let r = 0; r < rows; r++) {
-		board[r] = [];
-		for (let c = 0; c < columns; c++) {
-			board[r][c] = 0;
-		}
-	}
-	console.log(board)
-	return board;
-};
+        return self;
+    },
 
-function generate(givens) {
-	var board = initBoard();
-	let cell;
+    set(x, y, value) {
+        this._matrix[x][y] = value;
+    },
 
-	for (let i = 0; i < givens; i++) {
-		placeGiven();
-	}
-	
-	return board;
-};
+    get(x, y) {
+        return this._matrix[x][y];
+    },
 
-function placeGiven() {
-	const cell = randomCell();
-	const value = randomValue(1, 9);
-	const row = cell.row;
-	const col = cell.col;
+    isCellValid(x, y, value) {
+        const row = this.isRowSafe(x, value);
+        const col = this.isColSafe(y, value);
+        const block = this.isBlockSafe(x, y, value);
 
-	if (board[row][col] || !isValid(cell, value))
-		placeGiven();
-	else
-		board[row][col] = value;
-};
+        return (row && col && block);
+    },
 
-function isValid(cell, value) {
-	const row = cell.row;
-	const col = cell.col;
+    isRowSafe(x, value) {
+        const row = this._matrix[x];
 
-	return isRowSafe(row, value) &&
-		   isColSafe(col, value) &&
-		   isBlockSafe(row, col, value)
-};
+        return !row.includes(value);
+    },
 
-function isRowSafe(row, value) {
-	const arr = board[row];
+    isColSafe(y, value) {
+        let col, i;
 
-	return !arr.includes(value);
-};
+        for (i = 0; i < 9; i++) {
+            col = this._matrix[i];
+            if (col[y] === value)
+                return false;
+        }
 
-function isColSafe(col, value) {
-	let row;
+        return true;
+    },
 
-	for (let i = 0; i < rows; i++) {
-		row = board[i];
-		if (row[col] === value)
-			return false;
-	}
+    isBlockSafe(row, col, value) {
+        //TODO: allow different sizings
+        const blockSize = 3;
+        let leftColumn = 0;
+        let topRow = 0;
 
-	return true;
-};
+        while (col >= leftColumn + blockSize) {
+            leftColumn += blockSize;
+        }
 
-function isBlockSafe(row, col, value) {
-	const blockSize = 3;
-	let leftColumn = 0;
-	let topRow = 0;
+        while (row >= topRow + blockSize) {
+            topRow += blockSize;
+        }
 
-	while (col >= leftColumn + blockSize) {
-		leftColumn += blockSize;
-	}
+        for (let i = topRow; i < topRow + blockSize; i++) {
+            for (let j = leftColumn; j < leftColumn + blockSize; j++) {
+                if (this._matrix[i][j] === value)
+                    return false;
+            }
+        }
 
-	while (row >= topRow + blockSize) {
-		topRow += blockSize;
-	}
+        return true;
+    },
 
-	for (let i = topRow; i < topRow + blockSize; i++) {
-		for (let j = leftColumn; j < leftColumn + blockSize; j++) {
-			if (board[i][j] === value)
-				return false;
-		}
-	}
+    getEmptyCell() {
+        for (let x = 0; x < 9; x++) {
+            for (let y = 0; y < 9; y++) {
+                //TODO: define 'empty' value
+                if (this._matrix[x][y] === 0)
+                    return {x, y};
+            }
+        }
 
-	return true;
-};
+        return null;
+    },
 
-function randomCell() {
-	const row = randomValue(0, 8);
-	const col = randomValue(0, 8);
+    clone() {
+        return this.create(false, this._matrix.clone());
+    },
 
-	return {row, col};
-};
+    set solvable(isSolvable) {
+        this._solvable = isSolvable;
+    },
 
-function randomValue(min, max) {
-	return Math.floor(Math.random() * (max - min + 1) + min);
-};
+    get solvable() {
+        return this._solvable;
+    },
 
-export {generate};
+    getMatrix() {
+        return this._matrix.clone();
+    },
+
+    _createEmptyBoard() {
+        const board = [];
+
+        for (let x = 0; x < 9; x++) {
+            board[x] = [];
+            for (let y = 0; y < 9; y++) {
+                board[x][y] = 0;
+            }
+        }
+
+        return board;
+    }
+}
+
+export default Board;
