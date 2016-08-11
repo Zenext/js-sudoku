@@ -10,7 +10,7 @@ class Sudoku {
         const emptyBoard = Board.create();
         //simply run solver on an empty board and then dig holes in it
         const board = this._dig(this.solve(emptyBoard, false));
-        console.log(board)
+        
         return board.getMatrix();
     }
 

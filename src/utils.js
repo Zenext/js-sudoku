@@ -41,5 +41,5 @@ function shuffle(array) {
 export {
 	randomValue,
 	randomFromArray,
-    shuffle
+  shuffle
 }
