@@ -1,4 +1,6 @@
+import R from 'ramda';
 import Sudoku from './Sudoku';
+import Generator from './generator/Generator';
 
 var renderer = PIXI.autoDetectRenderer(800, 600, {backgroundColor : 0xffffff});
 document.body.appendChild(renderer.view);
@@ -14,7 +16,7 @@ const board = sudoku.generate();
 const boardGraphics = drawBoard();
 stage.addChild(boardGraphics);
 
-fillBoard(board);
+fillBoard(R.splitEvery(9, board));
 
 // start animating
 animate();
@@ -56,7 +58,7 @@ function fillBoard(board) {
     var text, value, style;
     for (let i = 0; i < board.length; i++) {
         for (let j = 0; j < board.length; j++) {
-            value = board[i][j];
+            value = board[i][j].value;
             style = {fill: 0x000000};
             if (value !== 0)
                 style.fill = 0xff0000;

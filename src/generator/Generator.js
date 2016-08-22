@@ -11,31 +11,29 @@ class Generator {
 	generate() {
         const emptyBoard = Board.create();
         const board = this._dig(this.fill(emptyBoard));
-
+        
         return board.getMatrix();
     }
 
-    _dig(board, givens = 40) {
-        const cells = shuffle(this._getAllCells());
-        let solvable, value, cell, x, y;
-        let removed = 0;
-
+    _dig(board, givens = 17) {
         board = board.clone();
+
+        const cells = shuffle(board.getMatrix());
+        let solvable, value, cell;
+        let removed = 0;
 
         for (cell of cells) {
             if (removed >= cells.length - givens) {
                 break;
             }
 
-            x = cell.x;
-            y = cell.y;
-            value = board.get(x, y);
-            board.set(x, y, 0);
+            value = cell.value;
+            cell.value = 0;
 
             solvable = this.fill(board).solvable;
 
             if (!solvable) {
-                board.set(x, y, value);
+                cell.value = value;
                 continue;
             }
 
@@ -46,20 +44,20 @@ class Generator {
     }
 
     fill(board) {
-    	return this._backtrack(board.clone(), board.getEmptyCell());
+        const copy = board.clone();
+    	return this._backtrack(copy, copy.getEmptyCell());
     }
 
     _backtrack(board, cell) {
         const possibles = this.tokens;
-        const {x, y} = cell;
         let nextCell, value;
 
         for (let i = 0; i < possibles.length; i++) {
             value = possibles[i];
 
-            if (board.isCellValid(x, y, value)) {
+            if (board.isCellValid(cell, value)) {
 
-                board.set(x, y, value);
+                cell.value = value;
                 nextCell = board.getEmptyCell();
 
                 if (!nextCell || this._backtrack(board, nextCell).solvable === true) {
@@ -69,7 +67,7 @@ class Generator {
             }
         }
 
-        board.set(x, y, 0);
+        cell.value = 0;
         board.solvable = false;
         return board;
     }
