@@ -6,10 +6,6 @@ const Cell = {
 		self.value = 0;
 
 		return self;
-	},
-
-	isEmpty() {
-		return this.value === 0;
 	}
 };
 

@@ -11,13 +11,11 @@ class Generator {
 	generate() {
         const emptyBoard = Board.create();
         const board = this._dig(this.fill(emptyBoard));
-        
+
         return board.getMatrix();
     }
 
-    _dig(board, givens = 17) {
-        board = board.clone();
-
+    _dig(board, givens = 40) {
         const cells = shuffle(board.getMatrix());
         let solvable, value, cell;
         let removed = 0;
@@ -44,8 +42,8 @@ class Generator {
     }
 
     fill(board) {
-        const copy = board.clone();
-    	return this._backtrack(copy, copy.getEmptyCell());
+        const boardCopy = board.clone();
+    	return this._backtrack(boardCopy, boardCopy.getEmptyCell());
     }
 
     _backtrack(board, cell) {
@@ -70,17 +68,6 @@ class Generator {
         cell.value = 0;
         board.solvable = false;
         return board;
-    }
-
-    _getAllCells() {
-        const arr = [];
-        for (let x = 0; x < 9; x++) {
-            for (let y = 0; y < 9; y++) {
-                arr.push({x, y});
-            }
-        }
-
-        return arr;
     }
 }
 

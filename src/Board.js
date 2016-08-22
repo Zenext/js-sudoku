@@ -93,7 +93,7 @@ const Board = {
     },
 
     getMatrix() {
-        return R.clone(this._matrix);
+        return this._matrix;
     },
 
     _createEmptyBoard() {
