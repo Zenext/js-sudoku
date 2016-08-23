@@ -12,7 +12,7 @@ class Generator {
         const emptyBoard = Board.create();
         const board = this._dig(this.fill(emptyBoard));
 
-        return board.getMatrix();
+        return board;
     }
 
     _dig(board, givens = 40) {

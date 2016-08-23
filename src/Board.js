@@ -69,6 +69,31 @@ const Board = {
         return true;
     },
 
+    getCellHouses(cell) {
+        const horz = this._houses.horizontal[cell.houses.horizontal];
+        const vert = this._houses.vertical[cell.houses.vertical];
+        const block = this._houses.blocks[cell.houses.block];
+
+        return [horz, vert, block];
+    },
+
+    updateCandidates() {
+        const cells = this.getEmptyCells();
+        //TODO: think how to manage those
+        const tokens = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+        let candidates, houses, notAllowed;
+
+        for (let cell of cells) {
+            houses = this.getCellHouses(cell);
+            notAllowed = R.uniq(
+                R.flatten(houses)
+                 .filter(c => c.value !== 0)
+                 .map(c => c.value)
+            );
+            cell.candidates = R.without(notAllowed, tokens);
+        }
+    },
+
     getEmptyCell() {
         let cell;
 
@@ -78,6 +103,10 @@ const Board = {
         }
 
         return null;
+    },
+
+    getEmptyCells() {
+        return this._matrix.filter(cell => cell.value === 0);
     },
 
     clone() {

@@ -3,8 +3,13 @@ class Solver {
 
 	}
 
+	solve(board) {
+		this.nakedSingles(board);
+	}
+
 	nakedSingles(board) {
-		
+		board.updateCandidates();
+		console.log(board)
 	}
 }
 
