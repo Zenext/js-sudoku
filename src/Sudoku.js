@@ -11,6 +11,7 @@ class Sudoku {
 
     generate() {
     	this.board = this.generator.generate();
+    	this.solver.solve(this.board);
     	return this.board.getMatrix();
     }
 

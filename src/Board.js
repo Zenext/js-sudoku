@@ -81,7 +81,7 @@ const Board = {
         const cells = this.getEmptyCells();
         //TODO: think how to manage those
         const tokens = [1, 2, 3, 4, 5, 6, 7, 8, 9];
-        let candidates, houses, notAllowed;
+        let houses, notAllowed;
 
         for (let cell of cells) {
             houses = this.getCellHouses(cell);
@@ -107,6 +107,16 @@ const Board = {
 
     getEmptyCells() {
         return this._matrix.filter(cell => cell.value === 0);
+    },
+
+    getAllHouses() {
+        const houses = [
+            this._houses.vertical,
+            this._houses.horizontal,
+            this._houses.blocks
+        ];
+
+        return R.map(arr => R.unnest(arr), houses);
     },
 
     clone() {

@@ -17,6 +17,7 @@ const boardGraphics = drawBoard();
 stage.addChild(boardGraphics);
 
 fillBoard(R.splitEvery(9, board));
+sudoku.solve(board);
 
 // start animating
 animate();
@@ -62,6 +63,12 @@ function fillBoard(board) {
             style = {fill: 0x000000};
             if (value !== 0)
                 style.fill = 0xff0000;
+            if (board[i][j].nakedSingles) {
+                style = {fill: board[i][j].nakedSingles};
+            }
+            if (board[i][j].hiddenSingles) {
+                style = {fill: board[i][j].hiddenSingles};
+            }
             text = new PIXI.Text(value + '', style);
             text.x = i * CELL_SIZE + 15;
             text.y = j * CELL_SIZE + 12;
