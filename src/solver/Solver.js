@@ -7,9 +7,9 @@ class Solver {
 
     solve(board) {
         board.updateCandidates();
-
+        
         this.nakedSingles(board);
-        // this.hiddenSingles(board);
+        this.hiddenSingles(board);
         this.nakedPairs(board);
     }
 
@@ -21,6 +21,7 @@ class Solver {
                 cell.value = R.head(cell.candidates);
                 cell.candidates = [];
                 cell.nakedSingles = 0x6666ff; //TODO: remove, for debugging
+                board.updateCandidates();
             }
         }
     }
@@ -30,28 +31,18 @@ class Solver {
         let candidates, occur, uniq;
 
         for (let house of houses) {
-            candidates = [];
-            for (let cell of house) {
-                candidates.push(cell.candidates);
-            }
-
-            candidates = R.flatten(candidates);
+            candidates = R.flatten(house.map(cell => cell.candidates));
             occur = R.countBy(Math.abs)(candidates);
-            uniq = R.map(
-                parseInt,
-                R.keys(R.filter(n => n === 1, occur))
-            );
-
-            for (let value of uniq) {
-                for (let cell of house) {
-                    if (cell.candidates.includes(value)) {
+            for (let cell of house) {
+                cell.candidates.forEach(value => {
+                    if (occur[value] === 1) {
                         cell.value = value;
                         cell.candidates = [];
                         cell.hiddenSingles = 0x6dfa7d; //TODO: remove, for debugging
+                        board.updateCandidates();
                     }
-                }
+                })
             }
-            
         }
     }
 
@@ -71,6 +62,7 @@ class Solver {
                 //get all other cells
                 cells = R.without(pairs, house);
                 cells.forEach(c => c.candidates = R.without(values, c.candidates));
+                board.updateCandidates();
             }
         }
     }
