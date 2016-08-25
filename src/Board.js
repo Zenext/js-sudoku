@@ -116,7 +116,7 @@ const Board = {
             this._houses.blocks
         ];
 
-        return R.map(arr => R.unnest(arr), houses);
+        return R.unnest(houses);
     },
 
     clone() {
